@@ -55,7 +55,7 @@ func main() {
 
 func ping(proxyURL string, authInfo request.Authentication) {
 	rand.Seed(time.Now().UnixNano())
-	client := resty.New().SetProxy(proxyURL).
+	client := resty.New().
 		SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
 		SetHeader("content-type", "application/json").
 		SetHeader("origin", "chrome-extension://fpdkjdnhkakefebpekbdhillbhonfjjp").
@@ -66,6 +66,9 @@ func ping(proxyURL string, authInfo request.Authentication) {
 		SetHeader("sec-fetch-mode", "cors").
 		SetHeader("sec-fetch-site", "cross-site").
 		SetHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36")
+	if proxyURL != "" {
+		client.SetProxy(proxyURL)
+	}
 
 	loginRequest := request.LoginRequest{
 		Username: authInfo.Email,
